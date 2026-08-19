@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eunji Park · Digital Business Card</title>
+<style>
+  :root {
+    --bg-1: #bfe0fb;
+    --bg-2: #eaf4ff;
+    --card-bg: #ffffff;
+    --card-border: #d7ecff;
+    --text-main: #3a3a3a;
+    --text-sub: #8b93a3;
+    --accent: #7fc3f2;
+    --accent-2: #ffb199;
+    --bear-fur: #f6d9ab;
+    --bear-blush: #ff9e8f;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", "Noto Sans KR", sans-serif;
+    background: linear-gradient(160deg, var(--bg-1), var(--bg-2) 70%);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 32px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 50px rgba(122, 176, 230, 0.35);
+    text-align: center;
+    animation: rise 0.6s ease-out;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: var(--bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 3px var(--card-border);
+  }
+
+  .avatar svg { width: 74px; height: 74px; }
+
+  h1 {
+    font-size: 22px;
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .role {
+    color: var(--text-sub);
+    font-size: 14px;
+    margin: 0 0 24px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--card-border);
+    margin: 24px 0;
+  }
+
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: var(--bg-2);
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .contact-item:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .contact-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .contact-value {
+    color: var(--text-main);
+  }
+
+  .contact-label {
+    color: var(--text-sub);
+    font-size: 11px;
+    display: block;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  .tag {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--bg-2);
+    border: 1px solid var(--card-border);
+    color: #5c8fc4;
+  }
+
+  footer {
+    margin-top: 28px;
+    font-size: 11px;
+    color: var(--text-sub);
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="avatar">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="26" cy="24" r="14" fill="var(--bear-fur)" stroke="#3a3a3a" stroke-width="3"/>
+        <circle cx="74" cy="24" r="14" fill="var(--bear-fur)" stroke="#3a3a3a" stroke-width="3"/>
+        <ellipse cx="50" cy="52" rx="38" ry="34" fill="var(--bear-fur)" stroke="#3a3a3a" stroke-width="3"/>
+        <circle cx="30" cy="56" r="7" fill="var(--bear-blush)" opacity="0.7"/>
+        <circle cx="70" cy="56" r="7" fill="var(--bear-blush)" opacity="0.7"/>
+        <circle cx="38" cy="48" r="3" fill="#2b2b2b"/>
+        <circle cx="62" cy="48" r="3" fill="#2b2b2b"/>
+        <path d="M46 62 Q50 66 54 62" stroke="#2b2b2b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1>박은지 · Eunji Park</h1>
+    <p class="role">Sweet Balance</p>
+
+    <div class="tags">
+      <span class="tag">#자동화</span>
+      <span class="tag">#효율</span>
+      <span class="tag">#호기심</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="contact-list">
+      <div class="contact-item">
+        <span class="contact-icon">✉️</span>
+        <span>
+          <span class="contact-label">Email</span>
+          <span class="contact-value">eunji.park@sweetbalance.kr</span>
+        </span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">🏢</span>
+        <span>
+          <span class="contact-label">Company</span>
+          <span class="contact-value">Sweet Balance</span>
+        </span>
+      </div>
+    </div>
+
+    <footer>Made with Claude · 2026</footer>
+  </div>
+</body>
+</html>
