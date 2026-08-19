@@ -141,6 +141,53 @@
     color: #5c8fc4;
   }
 
+  .intro {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.6;
+    margin: 0 0 20px;
+    padding: 0 4px;
+  }
+
+  .section-title {
+    font-size: 12px;
+    color: var(--text-sub);
+    text-align: left;
+    margin: 0 0 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .likes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .like-item {
+    flex: 1;
+    background: var(--bg-2);
+    border-radius: 16px;
+    padding: 14px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s ease;
+  }
+
+  .like-item:hover {
+    transform: translateY(-2px);
+  }
+
+  .like-icon {
+    font-size: 22px;
+  }
+
+  .like-label {
+    font-size: 12px;
+    color: var(--text-main);
+  }
+
   footer {
     margin-top: 28px;
     font-size: 11px;
@@ -164,12 +211,31 @@
       </svg>
     </div>
     <h1>박은지 · Eunji Park</h1>
-    <p class="role">Sweet Balance</p>
+    <p class="role">제품개발팀 · Sweet Balance</p>
+    <p class="intro">커피, 음악, 여행에서 영감을 얻는 제품개발팀 은지입니다.</p>
 
     <div class="tags">
       <span class="tag">#자동화</span>
       <span class="tag">#효율</span>
       <span class="tag">#호기심</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="section-title">좋아하는 것</p>
+    <div class="likes">
+      <div class="like-item">
+        <span class="like-icon">☕</span>
+        <span class="like-label">커피</span>
+      </div>
+      <div class="like-item">
+        <span class="like-icon">🎧</span>
+        <span class="like-label">음악 듣기</span>
+      </div>
+      <div class="like-item">
+        <span class="like-icon">✈️</span>
+        <span class="like-label">여행</span>
+      </div>
     </div>
 
     <div class="divider"></div>
@@ -185,8 +251,8 @@
       <div class="contact-item">
         <span class="contact-icon">🏢</span>
         <span>
-          <span class="contact-label">Company</span>
-          <span class="contact-value">Sweet Balance</span>
+          <span class="contact-label">Team</span>
+          <span class="contact-value">제품개발팀 · Sweet Balance</span>
         </span>
       </div>
     </div>
