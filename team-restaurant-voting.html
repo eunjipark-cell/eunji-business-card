@@ -246,13 +246,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .voters{font-size:12px;color:var(--ink-faint);line-height:1.4}
 .card-visit{padding:13px 18px 16px;background:var(--surface-2);display:flex;flex-direction:column;gap:10px}
 .visit-label{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint)}
-.visit-form{display:flex;gap:6px;flex-wrap:wrap}
-.visit-form input[type="date"]{flex:0 0 auto}
-.visit-form input[type="text"]{flex:1 1 110px}
+.visit-form{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .visit-list{display:flex;flex-direction:column;gap:6px}
 .visit-item{display:flex;gap:9px;align-items:baseline;font-size:13px}
-.visit-item .d{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--cat-korean);flex:0 0 auto}
-.visit-item .m{color:var(--ink-soft);flex:1}
+.visit-item .d{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--cat-korean)}
 .x{background:none;border:none;color:var(--ink-faint);cursor:pointer;font-size:12px;padding:0 2px;line-height:1}
 .x:hover{color:var(--accent)}
 .stamp{
@@ -306,7 +303,6 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .log-date{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--gold);flex:0 0 92px}
 .log-main{flex:1;min-width:180px;display:flex;flex-direction:column;gap:5px}
 .log-name{font-family:"Gowun Batang",serif;font-weight:700;font-size:17px}
-.log-memo{font-size:13.5px;color:var(--ink-soft)}
 
 .section-title{
   font-family:"Gowun Batang",serif;font-weight:700;font-size:17px;
@@ -343,7 +339,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 </style>
 <div id="app"></div>
 <div id="toast" role="status" aria-live="polite"></div>
-<script id="app-state" type="application/json">{"baseAddress": "경기 성남시 중원구 둔촌대로388번길 20", "places": [{"id": "p-danpung", "name": "단풍", "category": "western", "address": "", "area": "", "menus": ["토마토 마마 라구 파스타 (22,000원)", "치킨 도리아 (19,000원)", "뱅어스 & 매쉬 (26,000원)", "디톡스 스프 with 브레드 (13,000원)"], "note": "", "visits": []}, {"id": "p-forkner-bundang", "name": "포크너 분당점", "category": "western", "address": "", "area": "", "menus": ["오징어 먹물 리조또 (19,000원)", "클래식 살치살 스테이크 270g (49,000원)", "포크너 샐러드"], "note": "", "visits": []}, {"id": "p-nakseonjae", "name": "낙선재", "category": "korean", "address": "", "area": "", "menus": ["토종닭백숙 (80,000원)", "오리백숙 (85,000원)", "고기완자 대 (28,000원)", "고기완자 소 (15,000원)", "돌판갈비구이 대 (58,000원)", "돌판갈비구이 소 (38,000원)"], "note": "", "visits": []}, {"id": "p-cafe-rallo", "name": "카페랄로", "category": "cafe", "address": "", "area": "", "menus": ["랄로콤보 브런치 (19,500원)", "수제리코타샐러드&빵 브런치 (20,000원)", "부라따 루꼴라 피자 (27,000원)", "디아블로 치킨스테이크 (27,000원)"], "note": "", "visits": [{"date": "2026-08-21", "memo": ""}]}], "votes": {}}</script>
+<script id="app-state" type="application/json">{"baseAddress": "경기 성남시 중원구 둔촌대로388번길 20", "places": [{"id": "p-danpung", "name": "단풍", "category": "western", "address": "", "area": "", "menus": ["토마토 마마 라구 파스타 (22,000원)", "치킨 도리아 (19,000원)", "뱅어스 & 매쉬 (26,000원)", "디톡스 스프 with 브레드 (13,000원)"], "note": "", "visits": []}, {"id": "p-forkner-bundang", "name": "포크너 분당점", "category": "western", "address": "", "area": "", "menus": ["오징어 먹물 리조또 (19,000원)", "클래식 살치살 스테이크 270g (49,000원)", "포크너 샐러드"], "note": "", "visits": []}, {"id": "p-nakseonjae", "name": "낙선재", "category": "korean", "address": "", "area": "", "menus": ["토종닭백숙 (80,000원)", "오리백숙 (85,000원)", "고기완자 대 (28,000원)", "고기완자 소 (15,000원)", "돌판갈비구이 대 (58,000원)", "돌판갈비구이 소 (38,000원)"], "note": "", "visits": []}, {"id": "p-cafe-rallo", "name": "카페랄로", "category": "cafe", "address": "", "area": "", "menus": ["랄로콤보 브런치 (19,500원)", "수제리코타샐러드&빵 브런치 (20,000원)", "부라따 루꼴라 피자 (27,000원)", "디아블로 치킨스테이크 (27,000원)"], "note": "", "visits": [{"date": "2026-08-21"}]}], "votes": {}}</script>
 <script id="app-script">
 (function () {
   "use strict";
@@ -423,12 +419,8 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     return Object.keys(set);
   }
 
-  function directionsUrl(p) {
-    var dest = p.address || p.name;
-    return "https://www.google.com/maps/dir/?api=1" +
-           "&origin=" + encodeURIComponent(state.baseAddress) +
-           "&destination=" + encodeURIComponent(dest) +
-           "&travelmode=driving";
+  function naverSearchUrl(p) {
+    return "https://map.naver.com/p/search/" + encodeURIComponent(p.name);
   }
 
   function today() {
@@ -643,7 +635,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     html += '<div class="meta"><span class="k">주소</span><span>' +
             (p.address ? esc(p.address) + " " : "") +
-            '<a href="' + esc(directionsUrl(p)) + '" target="_blank" rel="noopener">구글맵에서 보기 ↗</a></span></div>';
+            '<a href="' + esc(naverSearchUrl(p)) + '" target="_blank" rel="noopener">네이버 지도에서 검색 ↗</a></span></div>';
     if (p.area) {
       html += '<div class="meta"><span class="k">위치</span><span>' + esc(p.area) + "</span></div>";
     }
@@ -676,14 +668,12 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         return String(b.date).localeCompare(String(a.date));
       }).map(function (v, i) {
         return '<li class="visit-item"><span class="d">' + esc(v.date) + '</span>' +
-               '<span class="m">' + (v.memo ? esc(v.memo) : "—") + "</span>" +
                '<button class="x" data-act="del-visit" data-id="' + p.id + '" data-date="' + esc(v.date) +
                '" data-i="' + i + '" title="기록 삭제">✕</button></li>';
       }).join("") + "</ul>";
     }
     html += '<div class="visit-form">' +
             '<input type="date" id="vd-' + p.id + '" value="' + today() + '" aria-label="다녀온 날짜">' +
-            '<input type="text" id="vm-' + p.id + '" placeholder="한줄 메모 (예: 8명 룸 예약)" maxlength="60" aria-label="방문 메모">' +
             '<button class="btn btn-sm" data-act="add-visit" data-id="' + p.id + '">기록</button>' +
             "</div></div>";
 
@@ -713,7 +703,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
       '<div class="form-actions">' +
         '<button class="btn btn-primary" data-act="save-place" data-id="' + (editing ? p.id : "") + '">' + (editing ? "수정 저장" : "추가하기") + "</button>" +
         '<button class="btn btn-ghost" data-act="cancel-form">취소</button>' +
-        '<span class="visit-label">저장하면 카드에 구글맵 링크가 자동으로 생겨요</span>' +
+        '<span class="visit-label">저장하면 카드에 네이버 지도 검색 링크가 자동으로 생겨요</span>' +
       "</div></div>";
   }
 
@@ -796,7 +786,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     if (!rows.length) {
       return '<div class="empty"><div class="big">아직 회식 기록이 없어요</div>' +
-             "<p>후보 카드 맨 아래 <strong>다녀온 날짜 기록</strong>에 날짜와 한줄 메모를 남기면 여기에 시간순으로 쌓입니다.</p></div>";
+             "<p>후보 카드 맨 아래 <strong>다녀온 날짜 기록</strong>에 날짜를 남기면 여기에 시간순으로 쌓입니다.</p></div>";
     }
 
     return '<div class="log">' + rows.map(function (r) {
@@ -806,7 +796,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         '<div class="log-main">' +
           '<div class="rank-head"><span class="log-name">' + esc(r.p.name) + "</span>" +
           '<span class="cat">' + c.label + "</span></div>" +
-          (r.v.memo ? '<div class="log-memo">' + esc(r.v.memo) + "</div>" : "") +
           (r.p.address ? '<div class="voters">' + esc(r.p.address) + "</div>" : "") +
         "</div>" +
       "</div>";
@@ -814,7 +803,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
   }
 
   function foot() {
-    return '<footer class="foot">카드의 <strong>구글맵에서 보기</strong> 링크를 누르면 사무실(' + esc(state.baseAddress) + ')에서 출발하는 자동차 경로를 바로 볼 수 있어요.</footer>';
+    return '<footer class="foot">카드의 <strong>네이버 지도에서 검색</strong> 링크를 누르면 가게 이름으로 네이버 지도에서 바로 찾아볼 수 있어요.</footer>';
   }
 
   /* ---------------- actions ---------------- */
@@ -911,12 +900,11 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     if (act === "add-visit") {
       var date = val("vd-" + id);
       if (!date) { toast("날짜를 골라주세요."); return; }
-      var memo = val("vm-" + id);
       var n4 = clone(state);
       n4.places = n4.places.map(function (p) {
         if (p.id !== id) return p;
         var visits = Array.isArray(p.visits) ? p.visits.slice() : [];
-        visits.push({ date: date, memo: memo });
+        visits.push({ date: date });
         return Object.assign({}, p, { visits: visits });
       });
       commit(n4, date + " 방문 기록 저장!");
@@ -947,10 +935,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     if (el.id === "me-input") {
       var b = document.querySelector('[data-act="save-me"]');
       if (b) b.click();
-    } else if (el.id && el.id.indexOf("vm-") === 0) {
-      var pid = el.id.slice(3);
-      var bb = document.querySelector('[data-act="add-visit"][data-id="' + pid + '"]');
-      if (bb) bb.click();
     } else if (el.id && el.id.indexOf("f-") === 0) {
       var sb = document.querySelector('[data-act="save-place"]');
       if (sb) sb.click();
