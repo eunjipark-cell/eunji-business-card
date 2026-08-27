@@ -258,19 +258,6 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
   border-radius:6px;padding:1px 8px;transform:rotate(-3deg);
 }
 
-/* ---------- forms ---------- */
-.panel{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-  padding:20px;margin-bottom:18px;box-shadow:var(--shadow);
-}
-.panel h3{font-family:"Gowun Batang",serif;font-size:18px;font-weight:700;margin-bottom:14px}
-.form-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.field{display:flex;flex-direction:column;gap:5px}
-.field.wide{grid-column:1/-1}
-.field label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
-.field .hint{font-size:11.5px;color:var(--ink-faint);letter-spacing:0;text-transform:none}
-.form-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
-
 /* ---------- results ---------- */
 .summary{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:22px}
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:15px 17px}
@@ -372,9 +359,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
   var ui = {
     tab: "places",
     cat: "all",
-    admin: localStorage.getItem("hoesik.admin") === "1",
-    me: localStorage.getItem("hoesik.me") || "",
-    form: null   // null | {mode:'new'} | {mode:'edit', id}
+    me: localStorage.getItem("hoesik.me") || ""
   };
 
   function readState() {
@@ -398,10 +383,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     return String(s === null || s === undefined ? "" : s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
-  }
-
-  function uid() {
-    return "p" + Math.random().toString(36).slice(2, 9);
   }
 
   function votesFor(id) {
@@ -532,9 +513,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
             '<label for="me-input">내 이름</label>' +
             '<input type="text" id="me-input" value="' + esc(ui.me) + '" placeholder="예: 박은지" maxlength="12">' +
             '<button class="btn btn-sm" data-act="save-me">저장</button>' +
-          "</div>" +
-          '<div class="me-box">' +
-            '<button class="btn btn-sm" data-act="toggle-admin" aria-pressed="' + (ui.admin ? "true" : "false") + '">관리자 모드</button>' +
             (saving ? '<span class="visit-label">저장 중…</span>' : "") +
           "</div>" +
         "</div>" +
@@ -567,10 +545,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     out += filters();
 
-    if (ui.admin) {
-      out += ui.form ? placeForm() : '<div style="margin-bottom:18px"><button class="btn btn-primary" data-act="new">+ 장소 추가</button></div>';
-    }
-
     var list = state.places.filter(function (p) {
       return ui.cat === "all" || p.category === ui.cat;
     });
@@ -585,7 +559,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     if (state.places.length === 0) {
       out += '<div class="empty"><div class="big">아직 후보가 없어요</div>' +
-             "<p>관리자 모드를 켜고 <strong>장소 추가</strong>를 누르면 이름·주소·메뉴를 등록할 수 있어요. 등록한 순간부터 팀원들이 투표할 수 있습니다.</p></div>";
+             "<p>은지가 회식 후보를 등록하면 여기에 나타나요. 등록되는 순간부터 팀원들이 투표할 수 있습니다.</p></div>";
       return out;
     }
 
@@ -645,12 +619,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     }
     if (p.note) html += '<p class="note">' + esc(p.note) + "</p>";
 
-    if (ui.admin) {
-      html += '<div class="form-actions" style="margin-top:6px">' +
-              '<button class="btn btn-sm" data-act="edit" data-id="' + p.id + '">수정</button>' +
-              '<button class="btn btn-sm" data-act="del" data-id="' + p.id + '">삭제</button>' +
-              "</div>";
-    }
     html += "</div>";
 
     html += '<div class="perf"></div>';
@@ -679,32 +647,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     html += "</article>";
     return html;
-  }
-
-  function placeForm() {
-    var editing = ui.form.mode === "edit";
-    var p = editing ? state.places.filter(function (x) { return x.id === ui.form.id; })[0] : null;
-    if (editing && !p) { ui.form = null; return ""; }
-    p = p || { name: "", category: "korean", address: "", area: "", menus: [], note: "" };
-
-    return '<div class="panel">' +
-      "<h3>" + (editing ? "장소 수정" : "새 장소 추가") + "</h3>" +
-      '<div class="form-grid">' +
-        '<div class="field"><label for="f-name">가게 이름</label><input type="text" id="f-name" value="' + esc(p.name) + '" placeholder="예: 둔촌칼국수"></div>' +
-        '<div class="field"><label for="f-cat">분류</label><select id="f-cat">' +
-          CATS.map(function (c) {
-            return '<option value="' + c.id + '"' + (p.category === c.id ? " selected" : "") + ">" + c.label + "</option>";
-          }).join("") + "</select></div>" +
-        '<div class="field wide"><label for="f-addr">주소</label><input type="text" id="f-addr" value="' + esc(p.address) + '" placeholder="도로명 주소를 붙여넣으세요 (비워두면 가게 이름으로 검색돼요)"></div>' +
-        '<div class="field wide"><label for="f-area">위치 설명 <span class="hint">건물·층·랜드마크</span></label><input type="text" id="f-area" value="' + esc(p.area) + '" placeholder="예: 성남산업단지 3단지 정문 앞 2층"></div>' +
-        '<div class="field wide"><label for="f-menus">대표 메뉴 <span class="hint">쉼표로 구분</span></label><input type="text" id="f-menus" value="' + esc(Array.isArray(p.menus) ? p.menus.join(", ") : "") + '" placeholder="예: 바지락칼국수, 보쌈, 왕만두"></div>' +
-        '<div class="field wide"><label for="f-note">메모</label><input type="text" id="f-note" value="' + esc(p.note) + '" placeholder="예: 룸 있음 / 주차 6대 / 단체 예약 필수"></div>' +
-      "</div>" +
-      '<div class="form-actions">' +
-        '<button class="btn btn-primary" data-act="save-place" data-id="' + (editing ? p.id : "") + '">' + (editing ? "수정 저장" : "추가하기") + "</button>" +
-        '<button class="btn btn-ghost" data-act="cancel-form">취소</button>' +
-        '<span class="visit-label">저장하면 카드에 네이버 지도 검색 링크가 자동으로 생겨요</span>' +
-      "</div></div>";
   }
 
   /* ----- tab 2: results ----- */
@@ -819,7 +761,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     var act = t.getAttribute("data-act");
     var id = t.getAttribute("data-id");
 
-    if (act === "tab") { ui.tab = id; ui.form = null; render(); return; }
+    if (act === "tab") { ui.tab = id; render(); return; }
     if (act === "cat") { ui.cat = id; render(); return; }
 
     if (act === "save-me") {
@@ -828,61 +770,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
       localStorage.setItem("hoesik.me", name);
       render();
       toast(name ? name + "님으로 투표합니다." : "이름을 지웠어요.");
-      return;
-    }
-
-    if (act === "toggle-admin") {
-      ui.admin = !ui.admin;
-      localStorage.setItem("hoesik.admin", ui.admin ? "1" : "0");
-      if (!ui.admin) ui.form = null;
-      render();
-      return;
-    }
-
-    if (act === "new") { ui.form = { mode: "new" }; render(); return; }
-    if (act === "edit") { ui.form = { mode: "edit", id: id }; ui.tab = "places"; render(); return; }
-    if (act === "cancel-form") { ui.form = null; render(); return; }
-
-    if (act === "save-place") {
-      var name2 = val("f-name");
-      if (!name2) { toast("가게 이름은 꼭 필요해요."); return; }
-      var draft = {
-        name: name2,
-        category: val("f-cat") || "korean",
-        address: val("f-addr"),
-        area: val("f-area"),
-        menus: val("f-menus").split(",").map(function (s) { return s.trim(); }).filter(Boolean),
-        note: val("f-note")
-      };
-      var next = clone(state);
-      if (id) {
-        next.places = next.places.map(function (p) {
-          if (p.id !== id) return p;
-          return Object.assign({}, p, draft);
-        });
-      } else {
-        draft.id = uid();
-        draft.visits = [];
-        next.places.push(draft);
-      }
-      ui.form = null;
-      commit(next, id ? "수정했어요." : name2 + " 추가했어요.");
-      return;
-    }
-
-    if (act === "del") {
-      if (t.getAttribute("data-confirm") !== "1") {
-        t.setAttribute("data-confirm", "1");
-        t.textContent = "정말 삭제?";
-        setTimeout(function () {
-          if (t.isConnected) { t.removeAttribute("data-confirm"); t.textContent = "삭제"; }
-        }, 3500);
-        return;
-      }
-      var n2 = clone(state);
-      n2.places = n2.places.filter(function (p) { return p.id !== id; });
-      delete n2.votes[id];
-      commit(n2, "삭제했어요.");
       return;
     }
 
@@ -935,9 +822,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     if (el.id === "me-input") {
       var b = document.querySelector('[data-act="save-me"]');
       if (b) b.click();
-    } else if (el.id && el.id.indexOf("f-") === 0) {
-      var sb = document.querySelector('[data-act="save-place"]');
-      if (sb) sb.click();
     }
   });
 
