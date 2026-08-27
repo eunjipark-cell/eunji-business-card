@@ -211,14 +211,6 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
   background:color-mix(in oklab,var(--c) 12%,transparent);
   border:1px solid color-mix(in oklab,var(--c) 30%,transparent);
 }
-.drive{
-  margin-left:auto;
-  font-family:"IBM Plex Mono",monospace;
-  font-size:12px;font-weight:600;
-  color:var(--gold);
-  white-space:nowrap;
-}
-.drive.empty{color:var(--ink-faint);font-weight:500}
 .place-name{
   font-family:"Gowun Batang","Nanum Myeongjo",serif;
   font-weight:700;font-size:21px;line-height:1.3;letter-spacing:-.01em;
@@ -351,7 +343,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 </style>
 <div id="app"></div>
 <div id="toast" role="status" aria-live="polite"></div>
-<script id="app-state" type="application/json">{"baseAddress": "경기 성남시 중원구 둔촌대로388번길 20", "places": [{"id": "p-danpung", "name": "단풍", "category": "western", "address": "", "area": "", "drive": "", "menus": ["토마토 마마 라구 파스타 (22,000원)", "치킨 도리아 (19,000원)", "뱅어스 & 매쉬 (26,000원)", "디톡스 스프 with 브레드 (13,000원)"], "note": "", "visits": []}, {"id": "p-forkner-bundang", "name": "포크너 분당점", "category": "western", "address": "", "area": "", "drive": "", "menus": ["오징어 먹물 리조또 (19,000원)", "클래식 살치살 스테이크 270g (49,000원)", "포크너 샐러드"], "note": "", "visits": []}, {"id": "p-nakseonjae", "name": "낙선재", "category": "korean", "address": "", "area": "", "drive": "", "menus": ["토종닭백숙 (80,000원)", "오리백숙 (85,000원)", "고기완자 대 (28,000원)", "고기완자 소 (15,000원)", "돌판갈비구이 대 (58,000원)", "돌판갈비구이 소 (38,000원)"], "note": "", "visits": []}, {"id": "p-cafe-rallo", "name": "카페랄로", "category": "cafe", "address": "", "area": "", "drive": "", "menus": ["랄로콤보 브런치 (19,500원)", "수제리코타샐러드&빵 브런치 (20,000원)", "부라따 루꼴라 피자 (27,000원)", "디아블로 치킨스테이크 (27,000원)"], "note": "", "visits": []}], "votes": {}}</script>
+<script id="app-state" type="application/json">{"baseAddress": "경기 성남시 중원구 둔촌대로388번길 20", "places": [{"id": "p-danpung", "name": "단풍", "category": "western", "address": "", "area": "", "menus": ["토마토 마마 라구 파스타 (22,000원)", "치킨 도리아 (19,000원)", "뱅어스 & 매쉬 (26,000원)", "디톡스 스프 with 브레드 (13,000원)"], "note": "", "visits": []}, {"id": "p-forkner-bundang", "name": "포크너 분당점", "category": "western", "address": "", "area": "", "menus": ["오징어 먹물 리조또 (19,000원)", "클래식 살치살 스테이크 270g (49,000원)", "포크너 샐러드"], "note": "", "visits": []}, {"id": "p-nakseonjae", "name": "낙선재", "category": "korean", "address": "", "area": "", "menus": ["토종닭백숙 (80,000원)", "오리백숙 (85,000원)", "고기완자 대 (28,000원)", "고기완자 소 (15,000원)", "돌판갈비구이 대 (58,000원)", "돌판갈비구이 소 (38,000원)"], "note": "", "visits": []}, {"id": "p-cafe-rallo", "name": "카페랄로", "category": "cafe", "address": "", "area": "", "menus": ["랄로콤보 브런치 (19,500원)", "수제리코타샐러드&빵 브런치 (20,000원)", "부라따 루꼴라 피자 (27,000원)", "디아블로 치킨스테이크 (27,000원)"], "note": "", "visits": []}], "votes": {}}</script>
 <script id="app-script">
 (function () {
   "use strict";
@@ -433,8 +425,10 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
   function directionsUrl(p) {
     var dest = p.address || p.name;
-    return "https://map.kakao.com/?sName=" + encodeURIComponent(state.baseAddress) +
-           "&eName=" + encodeURIComponent(dest);
+    return "https://www.google.com/maps/dir/?api=1" +
+           "&origin=" + encodeURIComponent(state.baseAddress) +
+           "&destination=" + encodeURIComponent(dest) +
+           "&travelmode=driving";
   }
 
   function today() {
@@ -599,7 +593,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     if (state.places.length === 0) {
       out += '<div class="empty"><div class="big">아직 후보가 없어요</div>' +
-             "<p>관리자 모드를 켜고 <strong>장소 추가</strong>를 누르면 이름·주소·메뉴·차로 걸리는 시간을 등록할 수 있어요. 등록한 순간부터 팀원들이 투표할 수 있습니다.</p></div>";
+             "<p>관리자 모드를 켜고 <strong>장소 추가</strong>를 누르면 이름·주소·메뉴를 등록할 수 있어요. 등록한 순간부터 팀원들이 투표할 수 있습니다.</p></div>";
       return out;
     }
 
@@ -644,15 +638,12 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     html += '<div class="card-body">';
     html += '<div class="card-head"><span class="cat">' + c.label + "</span>" +
-            (isVisited(p) ? '<span class="stamp">다녀옴</span>' : "") +
-            '<span class="drive' + (p.drive ? "" : " empty") + '">' +
-            (p.drive ? "차로 " + esc(p.drive) + "분" : "소요시간 미입력") + "</span></div>";
+            (isVisited(p) ? '<span class="stamp">다녀옴</span>' : "") + "</div>";
     html += '<h3 class="place-name">' + esc(p.name) + "</h3>";
 
-    if (p.address) {
-      html += '<div class="meta"><span class="k">주소</span><span>' + esc(p.address) +
-              ' <a href="' + esc(directionsUrl(p)) + '" target="_blank" rel="noopener">길찾기 ↗</a></span></div>';
-    }
+    html += '<div class="meta"><span class="k">주소</span><span>' +
+            (p.address ? esc(p.address) + " " : "") +
+            '<a href="' + esc(directionsUrl(p)) + '" target="_blank" rel="noopener">구글맵에서 보기 ↗</a></span></div>';
     if (p.area) {
       html += '<div class="meta"><span class="k">위치</span><span>' + esc(p.area) + "</span></div>";
     }
@@ -673,7 +664,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     html += '<div class="perf"></div>';
     html += '<div class="card-strip">' +
             '<button class="vote-btn" data-act="vote" data-id="' + p.id + '" aria-pressed="' + (mine ? "true" : "false") + '">' +
-            (mine ? "여기 좋아요 ✓" : "여기 좋아요") + ' <span class="num">' + vs.length + "</span></button>" +
+            (mine ? "투표 완료 ✓" : "투표") + ' <span class="num">' + vs.length + "</span></button>" +
             (vs.length ? '<span class="voters">' + esc(vs.join(", ")) + "</span>" : '<span class="voters">아직 투표 없음</span>') +
             "</div>";
 
@@ -704,7 +695,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     var editing = ui.form.mode === "edit";
     var p = editing ? state.places.filter(function (x) { return x.id === ui.form.id; })[0] : null;
     if (editing && !p) { ui.form = null; return ""; }
-    p = p || { name: "", category: "korean", address: "", area: "", menus: [], drive: "", note: "" };
+    p = p || { name: "", category: "korean", address: "", area: "", menus: [], note: "" };
 
     return '<div class="panel">' +
       "<h3>" + (editing ? "장소 수정" : "새 장소 추가") + "</h3>" +
@@ -714,18 +705,15 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
           CATS.map(function (c) {
             return '<option value="' + c.id + '"' + (p.category === c.id ? " selected" : "") + ">" + c.label + "</option>";
           }).join("") + "</select></div>" +
-        '<div class="field wide"><label for="f-addr">주소</label><input type="text" id="f-addr" value="' + esc(p.address) + '" placeholder="도로명 주소를 붙여넣으세요"></div>' +
-        '<div class="field"><label for="f-area">위치 설명 <span class="hint">건물·층·랜드마크</span></label><input type="text" id="f-area" value="' + esc(p.area) + '" placeholder="예: 성남산업단지 3단지 정문 앞 2층"></div>' +
-        '<div class="field"><label for="f-drive">차로 걸리는 시간(분) <span class="hint">사무실 출발 기준</span></label>' +
-          '<div style="display:flex;gap:6px"><input type="number" id="f-drive" min="1" max="180" value="' + esc(p.drive || "") + '" placeholder="12" style="flex:1">' +
-          '<button class="btn btn-sm" data-act="check-drive" type="button">카카오맵으로 확인 ↗</button></div></div>' +
+        '<div class="field wide"><label for="f-addr">주소</label><input type="text" id="f-addr" value="' + esc(p.address) + '" placeholder="도로명 주소를 붙여넣으세요 (비워두면 가게 이름으로 검색돼요)"></div>' +
+        '<div class="field wide"><label for="f-area">위치 설명 <span class="hint">건물·층·랜드마크</span></label><input type="text" id="f-area" value="' + esc(p.area) + '" placeholder="예: 성남산업단지 3단지 정문 앞 2층"></div>' +
         '<div class="field wide"><label for="f-menus">대표 메뉴 <span class="hint">쉼표로 구분</span></label><input type="text" id="f-menus" value="' + esc(Array.isArray(p.menus) ? p.menus.join(", ") : "") + '" placeholder="예: 바지락칼국수, 보쌈, 왕만두"></div>' +
         '<div class="field wide"><label for="f-note">메모</label><input type="text" id="f-note" value="' + esc(p.note) + '" placeholder="예: 룸 있음 / 주차 6대 / 단체 예약 필수"></div>' +
       "</div>" +
       '<div class="form-actions">' +
         '<button class="btn btn-primary" data-act="save-place" data-id="' + (editing ? p.id : "") + '">' + (editing ? "수정 저장" : "추가하기") + "</button>" +
         '<button class="btn btn-ghost" data-act="cancel-form">취소</button>' +
-        '<span class="visit-label">소요시간은 카카오맵에서 확인한 값을 직접 적어주세요</span>' +
+        '<span class="visit-label">저장하면 카드에 구글맵 링크가 자동으로 생겨요</span>' +
       "</div></div>";
   }
 
@@ -768,7 +756,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         '<div class="rank-main">' +
           '<div class="rank-head"><span class="rank-name">' + esc(p.name) + "</span>" +
             '<span class="cat">' + c.label + "</span>" +
-            (p.drive ? '<span class="drive mono">차로 ' + esc(p.drive) + "분</span>" : "") +
           "</div>" +
           '<div class="bar-track"><div class="bar-fill" style="width:' + w + '%"></div></div>' +
           '<div class="voters">' + (n ? esc(votesFor(p.id).join(", ")) : "아직 투표 없음") + "</div>" +
@@ -818,8 +805,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         '<div class="log-date">' + esc(r.v.date) + "</div>" +
         '<div class="log-main">' +
           '<div class="rank-head"><span class="log-name">' + esc(r.p.name) + "</span>" +
-          '<span class="cat">' + c.label + "</span>" +
-          (r.p.drive ? '<span class="drive mono">차로 ' + esc(r.p.drive) + "분</span>" : "") + "</div>" +
+          '<span class="cat">' + c.label + "</span></div>" +
           (r.v.memo ? '<div class="log-memo">' + esc(r.v.memo) + "</div>" : "") +
           (r.p.address ? '<div class="voters">' + esc(r.p.address) + "</div>" : "") +
         "</div>" +
@@ -828,8 +814,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
   }
 
   function foot() {
-    return '<footer class="foot">소요시간은 사무실(' + esc(state.baseAddress) + ') 출발 · 자동차 기준으로 은지가 직접 확인해 적어둔 값이에요.<br>' +
-           "카드의 길찾기 링크를 누르면 카카오맵에서 실시간 경로를 확인할 수 있습니다.</footer>";
+    return '<footer class="foot">카드의 <strong>구글맵에서 보기</strong> 링크를 누르면 사무실(' + esc(state.baseAddress) + ')에서 출발하는 자동차 경로를 바로 볼 수 있어요.</footer>';
   }
 
   /* ---------------- actions ---------------- */
@@ -869,14 +854,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     if (act === "edit") { ui.form = { mode: "edit", id: id }; ui.tab = "places"; render(); return; }
     if (act === "cancel-form") { ui.form = null; render(); return; }
 
-    if (act === "check-drive") {
-      var addr = val("f-addr") || val("f-name");
-      if (!addr) { toast("주소나 가게 이름을 먼저 입력해 주세요."); return; }
-      window.open("https://map.kakao.com/?sName=" + encodeURIComponent(state.baseAddress) +
-                  "&eName=" + encodeURIComponent(addr), "_blank", "noopener");
-      return;
-    }
-
     if (act === "save-place") {
       var name2 = val("f-name");
       if (!name2) { toast("가게 이름은 꼭 필요해요."); return; }
@@ -885,7 +862,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         category: val("f-cat") || "korean",
         address: val("f-addr"),
         area: val("f-area"),
-        drive: val("f-drive"),
         menus: val("f-menus").split(",").map(function (s) { return s.trim(); }).filter(Boolean),
         note: val("f-note")
       };
