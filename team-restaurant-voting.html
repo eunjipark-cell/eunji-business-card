@@ -108,8 +108,8 @@ body{
   flex-wrap:wrap;
   gap:18px 24px;
   align-items:flex-end;
-  justify-content:space-between;
 }
+.masthead > div:first-child{flex:1 1 auto;min-width:0}
 .mast-title{
   font-family:"Gowun Batang","Nanum Myeongjo",serif;
   font-weight:700;
@@ -149,7 +149,7 @@ body{
   border-radius:999px;
   padding:3px 10px;
 }
-.mast-tools{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.mast-tools{display:flex;flex-direction:column;gap:10px;align-items:flex-end;margin-left:auto}
 .me-box{display:flex;gap:8px;align-items:center}
 .me-box label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
 input[type="text"],input[type="date"],input[type="number"],select,textarea{
