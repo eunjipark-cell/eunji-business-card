@@ -137,6 +137,26 @@ body{
   background:var(--surface-2);
   border-radius:8px;
   border:1px solid var(--line-soft);
+  flex-wrap:wrap;
+}
+.weather-emoji{
+  background:var(--surface) !important;
+  border:1px solid var(--line) !important;
+  border-radius:6px !important;
+  padding:4px 8px !important;
+  cursor:pointer !important;
+  font-size:18px !important;
+  transition:all 0.2s !important;
+  line-height:1 !important;
+}
+.weather-emoji:hover{
+  border-color:var(--accent) !important;
+  transform:scale(1.1);
+}
+.weather-emoji.selected{
+  background:var(--accent) !important;
+  border-color:var(--accent) !important;
+  box-shadow:0 0 8px rgba(142,47,75,.3) !important;
 }
 .weather-icon{font-size:18px;line-height:1}
 .weather-info{display:flex;flex-direction:column;gap:2px}
@@ -553,11 +573,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         break;
       }
     }
-    if (currentOuting && currentOuting.date && !state.weatherCache[currentOuting.date]) {
-      fetchWeather(currentOuting.date, function (w) {
-        if (w) render();
-      });
-    }
   }
 
   function masthead() {
@@ -571,12 +586,14 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     }
     var weatherHtml = "";
     if (currentOuting && currentOuting.date) {
-      var cached = state.weatherCache[currentOuting.date];
-      if (cached) {
-        weatherHtml = '<div class="weather-box"><span class="weather-icon">' + getWeatherIcon(cached.code) + '</span><span class="weather-info"><strong>' + cached.tempMax + '°C / ' + cached.tempMin + '°C</strong><small>' + currentOuting.date + '</small></span></div>';
-      } else {
-        weatherHtml = '<div class="weather-box"><span class="weather-icon">🌡️</span><span class="weather-info">날씨 로딩 중...</span></div>';
-      }
+      var selectedWeather = currentOuting.weather || "";
+      var weatherEmojis = ["☀️", "🌤️", "⛅", "☁️", "🌧️", "⛈️", "❄️", "🌫️"];
+      weatherHtml = '<div class="weather-box" style="gap:6px;align-items:center">' +
+        '<span style="font-weight:500;color:var(--ink-faint);font-size:11px;text-transform:uppercase">날씨:</span>' +
+        weatherEmojis.map(function(e) {
+          return '<button class="weather-emoji' + (e === selectedWeather ? ' selected' : '') + '" data-act="select-weather" data-emoji="' + e + '" style="background:none;border:1px solid var(--line);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:18px;transition:all 0.2s" title="' + e + '">' + e + '</button>';
+        }).join("") +
+      '</div>';
     }
     return '' +
       '<header class="masthead">' +
@@ -943,6 +960,19 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
       return;
     }
 
+    if (act === "select-weather") {
+      var emoji = t.getAttribute("data-emoji");
+      var n = clone(state);
+      for (var i = 0; i < n.outings.length; i++) {
+        if (n.outings[i].id === n.currentOuting) {
+          n.outings[i].weather = n.outings[i].weather === emoji ? "" : emoji;
+          break;
+        }
+      }
+      commit(n);
+      return;
+    }
+
     if (act === "select-outing") {
       var n6 = clone(state);
       n6.currentOuting = t.value;
@@ -961,7 +991,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
       n7.currentOuting = outingId;
       document.getElementById("new-outing-label").value = "";
       document.getElementById("new-outing-date").value = "";
-      if (date) fetchWeather(date, function () { render(); });
       commit(n7, "회식 '" + label + "'을(를) 추가했어요!");
       return;
     }
