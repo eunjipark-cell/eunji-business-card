@@ -623,7 +623,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     var isPending = !currentOuting || currentOuting.status !== "completed";
     var t = [
       { id: "places", label: "후보 목록 · " + currentLabel, n: isPending ? state.places.filter(function (p) { return !isVisited(p); }).length : 0 },
-      { id: "results", label: "투표 현황", n: isPending ? allVoters().length : 0 },
+      { id: "results", label: "투표 현황" + (currentOuting && currentOuting.date ? " · " + currentOuting.date : ""), n: isPending ? allVoters().length : 0 },
       { id: "log", label: "다녀온 곳", n: state.places.filter(isVisited).length }
     ];
     return '<div class="tabs" role="tablist">' + t.map(function (x) {
