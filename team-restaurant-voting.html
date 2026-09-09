@@ -588,6 +588,11 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
                 return '<option value="' + o.id + '"' + (o.id === state.currentOuting ? ' selected' : '') + '>' + esc(o.label) + '</option>';
               }).join("") +
             '</select>' +
+            (state.currentOuting && state.outings.length > 0 ? '<div style="margin-top:8px;display:flex;gap:6px">' +
+              '<input type="text" id="edit-outing-name" value="' + esc(currentOuting.label) + '" maxlength="30" placeholder="회식 이름" style="flex:1;font-size:13px">' +
+              '<button class="btn btn-sm" data-act="update-outing-name">저장</button>' +
+              '<button class="btn btn-sm" data-act="delete-outing" style="background:#f5755d;color:white">삭제</button>' +
+            '</div>' : "") +
           "</div>" +
           '<div class="me-box">' +
             '<label for="new-outing-label">새 회식</label>' +
@@ -970,6 +975,30 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         }
       }
       commit(n8, "'" + placeName + "'으로 최종 결정했어요!");
+      return;
+    }
+
+    if (act === "update-outing-name") {
+      var newName = val("edit-outing-name").slice(0, 30);
+      if (!newName) { toast("회식 이름을 입력해 주세요."); return; }
+      var n9 = clone(state);
+      for (var i = 0; i < n9.outings.length; i++) {
+        if (n9.outings[i].id === n9.currentOuting) {
+          n9.outings[i].label = newName;
+          break;
+        }
+      }
+      commit(n9, "회식 이름을 수정했어요!");
+      return;
+    }
+
+    if (act === "delete-outing") {
+      if (!confirm("이 회식을 삭제하시겠어요? 투표 데이터도 함께 삭제됩니다.")) return;
+      var n10 = clone(state);
+      n10.outings = n10.outings.filter(function (o) { return o.id !== n10.currentOuting; });
+      if (n10.votes[n10.currentOuting]) delete n10.votes[n10.currentOuting];
+      n10.currentOuting = n10.outings.length > 0 ? n10.outings[0].id : "";
+      commit(n10, "회식을 삭제했어요!");
       return;
     }
   });
