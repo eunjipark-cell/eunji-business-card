@@ -924,6 +924,12 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
       if (!n3.votes[n3.currentOuting]) n3.votes[n3.currentOuting] = {};
       var list = Array.isArray(n3.votes[n3.currentOuting][id]) ? n3.votes[n3.currentOuting][id] : [];
       var at = list.indexOf(ui.me);
+      var myVoteCount = 0;
+      for (var j in n3.votes[n3.currentOuting]) {
+        var v = n3.votes[n3.currentOuting][j];
+        if (Array.isArray(v) && v.indexOf(ui.me) >= 0) myVoteCount++;
+      }
+      if (at < 0 && myVoteCount >= 2) { toast("한 사람당 최대 2개만 투표할 수 있어요."); return; }
       if (at >= 0) list.splice(at, 1); else list.push(ui.me);
       n3.votes[n3.currentOuting][id] = list;
       commit(n3, at >= 0 ? "투표를 취소했어요." : "투표했어요!");
