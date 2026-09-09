@@ -582,6 +582,12 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         "</div>" +
         '<div class="mast-tools">' +
           '<div class="me-box">' +
+            '<label for="new-outing-label">새 회식</label>' +
+            '<input type="text" id="new-outing-label" placeholder="예: 09/18(금) 점심 회식" maxlength="30">' +
+            '<input type="date" id="new-outing-date">' +
+            '<button class="btn btn-sm" data-act="add-outing">추가</button>' +
+          "</div>" +
+          '<div class="me-box">' +
             '<label for="outing-select">회식</label>' +
             '<select id="outing-select" data-act="select-outing">' +
               state.outings.map(function (o) {
@@ -593,12 +599,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
               '<button class="btn btn-sm" data-act="update-outing-name">저장</button>' +
               '<button class="btn btn-sm" data-act="delete-outing" style="background:#f5755d;color:white">삭제</button>' +
             '</div>' : "") +
-          "</div>" +
-          '<div class="me-box">' +
-            '<label for="new-outing-label">새 회식</label>' +
-            '<input type="text" id="new-outing-label" placeholder="예: 09/18(금) 점심 회식" maxlength="30">' +
-            '<input type="date" id="new-outing-date">' +
-            '<button class="btn btn-sm" data-act="add-outing">추가</button>' +
           "</div>" +
           '<div class="me-box">' +
             '<label for="me-input">내 이름</label>' +
