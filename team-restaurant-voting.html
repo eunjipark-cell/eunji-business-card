@@ -821,8 +821,8 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     html += '<div class="perf"></div>';
     html += '<div class="card-strip">' +
             '<button class="vote-btn" data-act="vote" data-id="' + p.id + '" aria-pressed="' + (mine ? "true" : "false") + '">' +
-            (mine ? "투표 완료 ✓" : "투표") + ' <span class="num">' + vs.length + "</span></button>" +
-            (vs.length ? '<span class="voters">' + vs.length + '명 투표함</span>' : '<span class="voters">아직 투표 없음</span>') +
+            (mine ? "투표 완료 ✓" : "투표") +
+            "</button>" +
             "</div>";
 
     html += '<div class="perf"></div>';
