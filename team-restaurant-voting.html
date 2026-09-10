@@ -601,7 +601,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     var weatherHtml = "";
     if (currentOuting && currentOuting.date) {
       var selectedWeather = currentOuting.weather || "";
-      var weatherEmojis = ["☀️", "🌤️", "⛅", "☁️", "🌧️", "⛈️", "❄️", "🌫️"];
+      var weatherEmojis = ["☀️", "🌤️", "⛅", "☁️", "🌧️", "⛈️", "❄️"];
       weatherHtml = '<div class="weather-box" style="gap:6px;align-items:center">' +
         '<span style="font-weight:500;color:var(--ink-faint);font-size:11px;text-transform:uppercase">날씨:</span>' +
         weatherEmojis.map(function(e) {
@@ -981,15 +981,57 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     if (act === "cat") { ui.cat = id; render(); return; }
 
     if (act === "admin-mode") {
-      var pwd = prompt("관리자 비밀번호를 입력하세요:");
-      if (pwd === "eunji2024") {
-        ui.isAdmin = true;
-        localStorage.setItem("hoesik.admin", "true");
-        render();
-        toast("관리자 모드로 접속했습니다.");
-      } else {
-        toast("비밀번호가 틀렸습니다.");
-      }
+      var modal = document.createElement("div");
+      modal.id = "admin-login-modal";
+      modal.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000";
+
+      var content = document.createElement("div");
+      content.style.cssText = "background:var(--surface);border-radius:var(--r);padding:24px;max-width:400px;width:90%;box-shadow:var(--shadow)";
+
+      var title = document.createElement("h2");
+      title.textContent = "관리자 비밀번호";
+      title.style.cssText = "margin:0 0 16px 0;font-size:18px";
+      content.appendChild(title);
+
+      var input = document.createElement("input");
+      input.type = "password";
+      input.placeholder = "비밀번호를 입력하세요";
+      input.style.cssText = "width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:14px;margin-bottom:16px;box-sizing:border-box";
+      content.appendChild(input);
+
+      var btnContainer = document.createElement("div");
+      btnContainer.style.cssText = "display:flex;gap:10px";
+
+      var okBtn = document.createElement("button");
+      okBtn.textContent = "확인";
+      okBtn.style.cssText = "flex:1;background:var(--accent);color:white;border:none;padding:10px;border-radius:6px;cursor:pointer;font-weight:600";
+      okBtn.addEventListener("click", function () {
+        if (input.value === "eunji2024") {
+          ui.isAdmin = true;
+          localStorage.setItem("hoesik.admin", "true");
+          document.body.removeChild(modal);
+          render();
+          toast("관리자 모드로 접속했습니다.");
+        } else {
+          toast("비밀번호가 틀렸습니다.");
+          input.value = "";
+          input.focus();
+        }
+      });
+
+      var cancelBtn = document.createElement("button");
+      cancelBtn.textContent = "취소";
+      cancelBtn.style.cssText = "flex:1;background:var(--line);color:var(--ink);border:none;padding:10px;border-radius:6px;cursor:pointer";
+      cancelBtn.addEventListener("click", function () {
+        document.body.removeChild(modal);
+      });
+
+      btnContainer.appendChild(okBtn);
+      btnContainer.appendChild(cancelBtn);
+      content.appendChild(btnContainer);
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+      input.focus();
       return;
     }
 
