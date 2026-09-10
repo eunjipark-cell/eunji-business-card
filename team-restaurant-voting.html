@@ -609,17 +609,28 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         }).join("") +
       '</div>';
     }
+    var adminHtml = ui.isAdmin ?
+      '<div class="me-box" style="padding:8px 12px;background:var(--accent-wash);border-radius:8px;border:1px solid var(--accent);align-items:center;gap:8px;margin-bottom:2px">' +
+        '<span style="font-size:13px;color:var(--accent);font-weight:600">⚙️ 관리자 모드</span>' +
+      '</div>' :
+      '<div class="me-box" style="flex-direction:column;align-items:stretch;gap:6px;margin-bottom:2px">' +
+        '<span style="font-size:11px;color:var(--ink-faint);text-align:center;padding:6px 0">🔒 익명 투표 중</span>' +
+        '<button class="btn btn-sm" data-act="admin-mode" style="background:var(--accent);color:white;font-weight:600;padding:10px;width:100%">관리자로 접속</button>' +
+      '</div>';
     return '' +
       '<header class="masthead">' +
-        "<div>" +
-          '<h1 class="mast-title">제품개발팀 회식 투표</h1>' +
-          '<div class="mast-sub">' +
-            "<span>은지가 모아둔 후보 " + state.places.length + "곳 · 다녀온 곳 " + visited + "곳</span>" +
-            '<span class="origin-tag">출발 · ' + esc(state.baseAddress) + "</span>" +
+        '<div style="display:flex;gap:12px;width:100%;align-items:flex-start;justify-content:space-between">' +
+          "<div>" +
+            '<h1 class="mast-title">제품개발팀 회식 투표</h1>' +
+            '<div class="mast-sub">' +
+              "<span>은지가 모아둔 후보 " + state.places.length + "곳 · 다녀온 곳 " + visited + "곳</span>" +
+              '<span class="origin-tag">출발 · ' + esc(state.baseAddress) + "</span>" +
+            "</div>" +
+            weatherHtml +
           "</div>" +
-          weatherHtml +
-        "</div>" +
-        '<div class="mast-tools">' +
+          adminHtml +
+        '</div>' +
+        '<div class="mast-tools" style="margin-top:16px;gap:10px">' +
           '<div class="me-box">' +
             '<label for="new-outing-label">새 회식</label>' +
             '<input type="text" id="new-outing-label" placeholder="예: 09/18(금) 점심 회식" maxlength="30">' +
@@ -639,8 +650,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
               '<button class="btn btn-sm" data-act="delete-outing" style="background:#f5755d;color:white">삭제</button>' +
             '</div>' : "") +
           "</div>" +
-          (!ui.isAdmin ? '<div class="me-box"><span style="font-size:12px;color:var(--ink-faint)">🔒 익명 투표 중</span></div>' : "") +
-          (!ui.isAdmin ? '<div class="me-box"><button class="btn btn-sm" data-act="admin-mode" style="background:var(--accent);color:white">관리자로 접속</button></div>' : '<div class="me-box"><span style="font-size:12px;color:var(--accent);font-weight:500">⚙️ 관리자 모드</span></div>') +
         "</div>" +
       "</header>";
   }
