@@ -631,12 +631,12 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
           adminHtml +
         '</div>' +
         '<div class="mast-tools" style="margin-top:16px;gap:10px">' +
-          '<div class="me-box">' +
+          (ui.isAdmin ? '<div class="me-box">' +
             '<label for="new-outing-label">새 회식</label>' +
             '<input type="text" id="new-outing-label" placeholder="예: 09/18(금) 점심 회식" maxlength="30">' +
             '<input type="date" id="new-outing-date">' +
             '<button class="btn btn-sm" data-act="add-outing">추가</button>' +
-          "</div>" +
+          "</div>" : "") +
           '<div class="me-box">' +
             '<label for="outing-select">회식</label>' +
             '<select id="outing-select" data-act="select-outing">' +
@@ -644,7 +644,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
                 return '<option value="' + o.id + '"' + (o.id === state.currentOuting ? ' selected' : '') + '>' + esc(o.label) + '</option>';
               }).join("") +
             '</select>' +
-            (state.currentOuting && state.outings.length > 0 ? '<div style="margin-top:8px;display:flex;gap:6px">' +
+            (ui.isAdmin && state.currentOuting && state.outings.length > 0 ? '<div style="margin-top:8px;display:flex;gap:6px">' +
               '<input type="text" id="edit-outing-name" value="' + esc(currentOuting.label) + '" maxlength="30" placeholder="회식 이름" style="flex:1;font-size:13px">' +
               '<button class="btn btn-sm" data-act="update-outing-name">저장</button>' +
               '<button class="btn btn-sm" data-act="delete-outing" style="background:#f5755d;color:white">삭제</button>' +
@@ -1232,6 +1232,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     }
 
     if (act === "add-outing") {
+      if (!ui.isAdmin) { toast("관리자만 회식을 추가할 수 있습니다."); return; }
       var label = val("new-outing-label").slice(0, 30);
       var date = val("new-outing-date");
       if (!label) { toast("회식 이름을 입력해 주세요."); return; }
@@ -1267,6 +1268,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     }
 
     if (act === "update-outing-name") {
+      if (!ui.isAdmin) { toast("관리자만 회식을 수정할 수 있습니다."); return; }
       var newName = val("edit-outing-name").slice(0, 30);
       if (!newName) { toast("회식 이름을 입력해 주세요."); return; }
       var n9 = clone(state);
@@ -1281,6 +1283,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     }
 
     if (act === "delete-outing") {
+      if (!ui.isAdmin) { toast("관리자만 회식을 삭제할 수 있습니다."); return; }
       if (!confirm("이 회식을 삭제하시겠어요? 투표 데이터도 함께 삭제됩니다.")) return;
       var n10 = clone(state);
       n10.outings = n10.outings.filter(function (o) { return o.id !== n10.currentOuting; });
