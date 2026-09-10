@@ -612,6 +612,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     var adminHtml = ui.isAdmin ?
       '<div class="me-box" style="padding:8px 12px;background:var(--accent-wash);border-radius:8px;border:1px solid var(--accent);align-items:center;gap:8px;margin-bottom:2px">' +
         '<span style="font-size:13px;color:var(--accent);font-weight:600">⚙️ 관리자 모드</span>' +
+        '<button class="btn btn-sm" data-act="logout-admin" style="background:var(--accent);color:white;padding:5px 10px;font-size:11px">나가기</button>' +
       '</div>' :
       '<div class="me-box" style="flex-direction:column;align-items:stretch;gap:6px;margin-bottom:2px">' +
         '<span style="font-size:11px;color:var(--ink-faint);text-align:center;padding:6px 0">🔒 익명 투표 중</span>' +
@@ -978,6 +979,14 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     if (act === "tab") { ui.tab = id; render(); return; }
     if (act === "cat") { ui.cat = id; render(); return; }
+
+    if (act === "logout-admin") {
+      ui.isAdmin = false;
+      localStorage.setItem("hoesik.admin", "false");
+      render();
+      toast("관리자 모드를 종료했습니다.");
+      return;
+    }
 
     if (act === "admin-mode") {
       var modal = document.createElement("div");
