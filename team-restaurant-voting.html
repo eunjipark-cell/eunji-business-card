@@ -837,10 +837,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
                '" data-i="' + i + '" title="기록 삭제">✕</button></li>';
       }).join("") + "</ul>";
     }
-    html += '<div class="visit-form">' +
-            '<input type="date" id="vd-' + p.id + '" value="' + today() + '" aria-label="다녀온 날짜">' +
-            '<button class="btn btn-sm" data-act="add-visit" data-id="' + p.id + '">기록</button>' +
-            "</div></div>";
+    html += "</div>";
 
     html += "</article>";
     return html;
@@ -944,7 +941,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
     if (!rows.length) {
       return '<div class="empty"><div class="big">아직 회식 기록이 없어요</div>' +
-             "<p>후보 카드 맨 아래 <strong>다녀온 날짜 기록</strong>에 날짜를 남기면 여기에 시간순으로 쌓입니다.</p></div>";
+             "<p>투표 결과가 확정되면 방문 날짜가 자동으로 기록됩니다.</p></div>";
     }
 
     return '<div class="log">' + rows.map(function (r) {
@@ -1257,12 +1254,13 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         }
       }
       var placeName = "";
-      for (var i = 0; i < n8.places.length; i++) {
-        if (n8.places[i].id === id) {
-          placeName = n8.places[i].name;
-          break;
-        }
-      }
+      n8.places = n8.places.map(function (p) {
+        if (p.id !== id) return p;
+        placeName = p.name;
+        var visits = Array.isArray(p.visits) ? p.visits.slice() : [];
+        visits.push({ date: today() });
+        return Object.assign({}, p, { visits: visits });
+      });
       commit(n8, "'" + placeName + "'으로 최종 결정했어요!");
       return;
     }
