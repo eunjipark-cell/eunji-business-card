@@ -160,15 +160,6 @@ body{
 }
 .weather-icon{font-size:18px;line-height:1}
 .weather-info{display:flex;flex-direction:column;gap:2px}
-.origin-tag{
-  font-family:"IBM Plex Mono",monospace;
-  font-size:11px;
-  letter-spacing:.02em;
-  color:var(--gold);
-  border:1px dashed color-mix(in oklab,var(--gold) 45%,transparent);
-  border-radius:999px;
-  padding:3px 10px;
-}
 .mast-tools{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex:0 0 auto;margin-left:auto}
 .me-box{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .me-box label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
@@ -475,26 +466,6 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     return d.getFullYear() + "-" + (m.length < 2 ? "0" + m : m) + "-" + (day.length < 2 ? "0" + day : day);
   }
 
-  var weatherEmojis = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️", 51: "🌦️", 61: "🌧️", 63: "🌧️", 65: "⛈️", 71: "❄️", 73: "❄️", 75: "❄️", 77: "❄️", 80: "🌧️", 81: "⛈️", 82: "⛈️", 85: "❄️", 86: "❄️", 95: "⛈️", 96: "⛈️", 99: "⛈️" };
-
-  function getWeatherIcon(code) {
-    if (code === undefined || code === null) return "🌡️";
-    var emoji = weatherEmojis[code];
-    return emoji || "🌡️";
-  }
-
-  function fetchWeather(dateStr, callback) {
-    if (!dateStr) { callback(null); return; }
-    if (state.weatherCache[dateStr]) { callback(state.weatherCache[dateStr]); return; }
-    var lat = 37.4365, lon = 127.1288;
-    var url = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&daily=temperature_2m_max,temperature_2m_min,weather_code&date=" + dateStr + "&timezone=Asia/Seoul";
-    fetch(url).then(function (r) { return r.json(); }).then(function (data) {
-      if (!data.daily || !data.daily.time || !data.daily.time[0]) { callback(null); return; }
-      var result = { date: dateStr, tempMax: Math.round(data.daily.temperature_2m_max[0]), tempMin: Math.round(data.daily.temperature_2m_min[0]), code: data.daily.weather_code[0] };
-      state.weatherCache[dateStr] = result;
-      callback(result);
-    }).catch(function () { callback(null); });
-  }
 
   /* ---------------- persistence ---------------- */
 
