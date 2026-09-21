@@ -657,7 +657,7 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
       { id: "places", label: "후보 목록 · " + currentLabel, n: isVotingOpen ? placesToShow.length : 0, show: true },
       { id: "results", label: "투표 현황" + (currentOuting && currentOuting.date ? " · " + currentOuting.date : ""), n: isPending ? allVoters().length : 0, show: !isPending || ui.isAdmin || currentOuting.status === "completed" },
       { id: "log", label: "다녀온 곳", n: state.places.filter(isVisited).length, show: true },
-      { id: "admin", label: "식당 정보", n: state.places.length, show: ui.isAdmin }
+      { id: "admin", label: "식당 정보", n: state.places.length, show: true }
     ];
     return '<div class="tabs" role="tablist">' + t.filter(function(x) { return x.show; }).map(function (x) {
       return '<button class="tab" role="tab" aria-selected="' + (ui.tab === x.id ? "true" : "false") +
