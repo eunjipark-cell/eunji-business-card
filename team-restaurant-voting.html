@@ -544,11 +544,16 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
   function render() {
     var app = document.getElementById("app");
     if (!app) return;
+    var tabContent = "";
+    if (ui.tab === "places") tabContent = placesTab();
+    else if (ui.tab === "results") tabContent = resultsTab();
+    else if (ui.tab === "log") tabContent = logTab();
+    else if (ui.tab === "admin") tabContent = adminTab();
     app.innerHTML =
       '<div class="wrap">' +
         masthead() +
         tabs() +
-        (ui.tab === "places" ? placesTab() : ui.tab === "results" ? resultsTab() : logTab()) +
+        tabContent +
         foot() +
       "</div>";
     var currentOuting = null;
@@ -651,7 +656,8 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
     var t = [
       { id: "places", label: "후보 목록 · " + currentLabel, n: isVotingOpen ? placesToShow.length : 0, show: true },
       { id: "results", label: "투표 현황" + (currentOuting && currentOuting.date ? " · " + currentOuting.date : ""), n: isPending ? allVoters().length : 0, show: !isPending || ui.isAdmin || currentOuting.status === "completed" },
-      { id: "log", label: "다녀온 곳", n: state.places.filter(isVisited).length, show: true }
+      { id: "log", label: "다녀온 곳", n: state.places.filter(isVisited).length, show: true },
+      { id: "admin", label: "식당 정보", n: state.places.length, show: ui.isAdmin }
     ];
     return '<div class="tabs" role="tablist">' + t.filter(function(x) { return x.show; }).map(function (x) {
       return '<button class="tab" role="tab" aria-selected="' + (ui.tab === x.id ? "true" : "false") +
@@ -926,6 +932,50 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         "</div>" +
       "</div>";
     }).join("") + "</div>";
+  }
+
+  /* ----- admin tab: 식당 정보 관리 ----- */
+
+  function adminTab() {
+    var out = '<h2 class="section-title">식당 정보 관리</h2>';
+    out += '<div style="margin-bottom:16px;font-size:13px;color:var(--ink-soft)">총 ' + state.places.length + '곳의 식당 정보</div>';
+    out += '<div class="grid">' + state.places.map(function (p) {
+      var c = catOf(p.category);
+      var html = '<article class="card" style="--c:var(' + c.v + ')">';
+      html += '<div class="card-body">';
+      html += '<div class="card-head"><span class="cat">' + c.label + "</span></div>";
+      html += '<h3 class="place-name">' + esc(p.name) + "</h3>";
+      if (p.address) {
+        html += '<div class="meta"><span class="k">주소</span><span>' + esc(p.address) + '</span></div>';
+      }
+      if (p.area) {
+        html += '<div class="meta"><span class="k">위치</span><span>' + esc(p.area) + "</span></div>";
+      }
+      if (p.menus && p.menus.length) {
+        html += '<div class="meta"><span class="k">메뉴</span><ul class="menus">' +
+                p.menus.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("") + "</ul></div>";
+      }
+      if (p.note) {
+        html += '<p class="note">' + esc(p.note) + "</p>";
+      }
+      html += '</div>';
+      html += '<div class="perf"></div>';
+      html += '<div class="card-visit" style="background:var(--surface-2)">';
+      html += '<span class="visit-label">방문 기록</span>';
+      if (isVisited(p)) {
+        html += '<ul class="visit-list">' + p.visits.slice().sort(function (a, b) {
+          return String(b.date).localeCompare(String(a.date));
+        }).map(function (v) {
+          return '<li class="visit-item"><span class="d">' + esc(v.date) + '</span></li>';
+        }).join("") + "</ul>";
+      } else {
+        html += '<div style="font-size:13px;color:var(--ink-faint);padding:8px 0">아직 방문 기록이 없습니다</div>';
+      }
+      html += '</div>';
+      html += "</article>";
+      return html;
+    }).join("") + "</div>";
+    return out;
   }
 
   function foot() {
