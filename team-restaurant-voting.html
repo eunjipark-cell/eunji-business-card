@@ -938,8 +938,10 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
 
   function adminTab() {
     var out = '<h2 class="section-title">식당 정보 관리</h2>';
-    out += '<div style="margin-bottom:16px;font-size:13px;color:var(--ink-soft)">총 ' + state.places.length + '곳의 식당 정보</div>';
-    out += '<div class="grid">' + state.places.map(function (p) {
+    out += '<div style="margin-bottom:20px;font-size:14px;color:var(--ink)">총 <strong>' + state.places.length + '</strong>곳의 식당 정보</div>';
+    out += '<div class="grid">';
+    for (var i = 0; i < state.places.length; i++) {
+      var p = state.places[i];
       var c = catOf(p.category);
       var html = '<article class="card" style="--c:var(' + c.v + ')">';
       html += '<div class="card-body">';
@@ -952,8 +954,11 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
         html += '<div class="meta"><span class="k">위치</span><span>' + esc(p.area) + "</span></div>";
       }
       if (p.menus && p.menus.length) {
-        html += '<div class="meta"><span class="k">메뉴</span><ul class="menus">' +
-                p.menus.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("") + "</ul></div>";
+        html += '<div class="meta"><span class="k">메뉴</span><ul class="menus">';
+        for (var j = 0; j < p.menus.length; j++) {
+          html += "<li>" + esc(p.menus[j]) + "</li>";
+        }
+        html += "</ul></div>";
       }
       if (p.note) {
         html += '<p class="note">' + esc(p.note) + "</p>";
@@ -963,18 +968,20 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
       html += '<div class="card-visit" style="background:var(--surface-2)">';
       html += '<span class="visit-label">방문 기록</span>';
       if (isVisited(p)) {
-        html += '<ul class="visit-list">' + p.visits.slice().sort(function (a, b) {
-          return String(b.date).localeCompare(String(a.date));
-        }).map(function (v) {
-          return '<li class="visit-item"><span class="d">' + esc(v.date) + '</span></li>';
-        }).join("") + "</ul>";
+        html += '<ul class="visit-list">';
+        var visits = p.visits.slice().sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+        for (var k = 0; k < visits.length; k++) {
+          html += '<li class="visit-item"><span class="d">' + esc(visits[k].date) + '</span></li>';
+        }
+        html += "</ul>";
       } else {
         html += '<div style="font-size:13px;color:var(--ink-faint);padding:8px 0">아직 방문 기록이 없습니다</div>';
       }
       html += '</div>';
       html += "</article>";
-      return html;
-    }).join("") + "</div>";
+      out += html;
+    }
+    out += "</div>";
     return out;
   }
 
