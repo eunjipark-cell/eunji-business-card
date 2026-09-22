@@ -900,7 +900,9 @@ footer.foot{margin-top:40px;font-size:11.5px;color:var(--ink-faint);text-align:c
       html += '<div class="card-head"><span class="cat">' + c.label + "</span></div>";
       html += '<h3 class="place-name">' + esc(p.name) + "</h3>";
       if (p.address) {
-        html += '<div class="meta"><span class="k">주소</span><span>' + esc(p.address) + '</span></div>';
+        html += '<div class="meta"><span class="k">주소</span><span>' +
+                esc(p.address) + ' ' +
+                '<a href="' + esc(naverSearchUrl(p)) + '" target="_blank" rel="noopener">네이버 지도에서 검색 ↗</a></span></div>';
       }
       if (p.area) {
         html += '<div class="meta"><span class="k">위치</span><span>' + esc(p.area) + "</span></div>";
